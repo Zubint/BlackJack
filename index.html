@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Deck of cards</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="main.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	$(document).ready(function(){
+		var myDeck = {};
+		var pDealer = {};
+		var pPlayer1 = {};
+
+		startGame();
+
+		function endGame()
+		{
+			var finalScorePlayer1=0;
+			var finalScoreDealer=0;
+			var strNarrative = "";
+
+			strNarrative ="<p>";
+
+			//finish dealing the cards to the dealer
+			// alert("game is over");
+			pDealer.getScore();
+			while (pDealer.score<17 || pDealer.altScore<17)
+			{
+				// console.log(pDealer.score);
+				pDealer.getCard(myDeck.deal().dealCard);
+				pDealer.getScore();
+
+			}
+
+				if (Math.abs(21-pPlayer1.score) <  Math.abs(21-pPlayer1.altScore))
+				{
+					finalScorePlayer1 =pPlayer1.score;
+				}
+				else
+				{
+					finalScorePlayer1 = pPlayer1.altScore;
+				}
+
+				if (finalScorePlayer1 > 21)
+				{
+					finalScorePlayer1 = 99; //busted
+				}
+
+				if (Math.abs(21-pDealer.score) < Math.abs(21-pDealer.altScore))
+				{
+					finalScoreDealer =pDealer.score;
+				}
+				else
+				{
+					finalScoreDealer = pDealer.altScore;
+				}
+
+				if (finalScoreDealer > 21)
+				{
+					finalScoreDealer = 99; //busted
+				}
+
+
+				console.log(finalScorePlayer1);
+				console.log(finalScoreDealer);
+				if (finalScoreDealer == finalScorePlayer1 && finalScorePlayer1 !=99)
+				{
+					// console.log("Push");
+					strNarrative += "Push";
+				}
+
+				if (finalScorePlayer1 !=99 && finalScorePlayer1 > finalScoreDealer)
+				{
+					//Player wins
+					// console.log("You win! =) ");
+					strNarrative += "You win!";
+				}
+				
+				if (finalScorePlayer1 < finalScoreDealer  && finalScoreDealer !=99)
+				{
+					// console.log("You Lost =(");
+					strNarrative += "You lost =(";
+				}
+				
+				if (finalScorePlayer1 ==99 )
+				{
+					// console.log("You BUSTED! =| ");
+					strNarrative += "You BUSTED! =|";
+				}
+
+				if (finalScorePlayer1 == 21)
+				{
+					// console.log ("Player BlackJack!");
+					strNarrative += "You got 21!";
+				}
+
+				if (finalScoreDealer == 21)
+				{
+					// console.log("Dealer BlackJack!");
+					strNarrative += "Dealer 21!";
+				}
+
+				if (finalScoreDealer == 99 && finalScorePlayer1 !=99)
+				{
+					// console.log ("You win!  Dealer Busted");
+					strNarrative += "You win!  Dealer Busted!";
+				}
+
+
+				strNarrative += "</p>";
+
+				if(finalScoreDealer==99)
+				{
+					finalScoreDealer="BUSTED";
+				}
+				pDealer.getScore();
+				pDealer.showCards('dealer');
+				document.getElementById('pDealer').innerHTML=pDealer.handHTML;
+				document.getElementById('pDealerScore').innerHTML="Dealer final score: " + finalScoreDealer;
+				document.getElementById('play-narrative').innerHTML=strNarrative;
+				pPlayer1.score =0;
+				pPlayer1.altScore =0;
+				pDealer.score =0;
+				pDealer.altScore =0;
+				pPlayer1.hand=[];
+				pDealer.hand=[];
+
+			// return false;
+		}
+		function scoring(objPlayer)
+		{
+			var strScoreHTML="";
+
+			if (objPlayer.score < 21 || objPlayer.altScore < 21)
+			{
+				
+			}
+			
+			if(objPlayer.altScore > 21 && objPlayer.score > 21)
+			{
+				// game over
+				// endGame();
+
+     			strScoreHTML = "BUST!  Points: " + objPlayer.score;
+
+				return strScoreHTML;
+			}
+
+			if(objPlayer.altScore != objPlayer.score)
+			{
+				strScoreHTML ="Points: " + objPlayer.score + " or " + objPlayer.altScore;
+				return strScoreHTML;
+			}
+			else
+			{
+				strScoreHTML = "Points: " + objPlayer.score;
+				return strScoreHTML;
+			}
+		}
+
+		$('#p1Reset').submit(function(){
+
+			startGame();
+			// return false;
+
+		});
+		
+		$('#p1Stand').submit(function(){
+
+			// document.getElementById('p1Hit').setAttribute(false);
+			endGame();
+			return false;
+		})		
+		$('#p1Hit').submit(function(){
+			pPlayer1.getCard(myDeck.deal().dealCard);
+			pPlayer1.showCards("player");
+			document.getElementById('pCards1').innerHTML=pPlayer1.handHTML;
+			console.log(pPlayer1.handHTML);
+			pPlayer1.getScore();
+			document.getElementById('player1Score').innerHTML=scoring(pPlayer1);
+			console.log (pPlayer1.score);
+			return false;
+
+		});
+
+		function startGame(){
+
+			if (myDeck !=undefined){
+				myDeck = null;
+			}
+
+			myDeck = new Deck();
+			// myDeck.shuffle(Math.floor(Math.random()*10000));
+			// console.log (myDeck.cards);
+			myDeck.newSet();
+			myDeck.shuffle(Math.floor(Math.random()*1000));
+			myDeck.showCards();
+			// document.getElementById("cards-container").innerHTML  = myDeck.cardHTML;
+			document.getElementById("cards-container").innerHTML = "<img src='./cards-png/b1fv.png'>";
+			
+			pDealer = new Player("Dealer Susan");
+			pPlayer1 = new Player("Player 1");
+
+			//Deal card to player
+			pPlayer1.getCard(myDeck.deal().dealCard);
+			pDealer.getCard(myDeck.deal().dealCard);
+			pPlayer1.getCard(myDeck.deal().dealCard);
+			pDealer.getCard(myDeck.deal().dealCard);
+
+			pPlayer1.showCards("player");
+			document.getElementById('pCards1').innerHTML=pPlayer1.handHTML;
+
+			pPlayer1.getScore();
+			document.getElementById('player1Score').innerHTML=scoring(pPlayer1);
+			document.getElementById('p1Hit').enabled =true;
+
+			//deal card to dealer
+			//deal card to player
+			//deal second card to dealer (face down)
+			
+
+			return false;
+		};
+
+		$('#shuffle').submit(function(){
+
+			myDeck.shuffle(3000);
+			myDeck.showCards();
+			document.getElementById("cards-container").innerHTML = myDeck.deckHTML;
+			return false;
+		});
+
+	});
+	</script>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+<div class='container'>
+	<div class='wrapper'>
+		<div id="cards-container">
+			<!-- Deck -->
+		</div>
+					
+					<div id='pDealer'>
+						<!--Dealer cards -->
+					</div>
+
+					<h4 id='pDealerScore'>Points: 0</h4>
+					
+					<div id='pCards1'>
+					<!--Player Cards -->
+					</div>
+
+			<div class='player-wrapper'>
+					<h4 class='playerInfo' id='player1Score'>Points: 0</h4>
+					<form name='player1Hit' method='post' id='p1Hit'>
+						<button type='submit'>Hit</button>
+					</form>
+					<form name='player1Stand' method='post' id='p1Stand'>
+						<button type='submit'>Stand</button>
+					</form>
+					<form name='player1reset' method='post' id='p1Reset'>
+						<button type='submit'>Reset</button>
+					</form>
+					<div id='play-narrative'>
+						<!-- Game result -->
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

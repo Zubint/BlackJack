@@ -1,0 +1,94 @@
+
+*{
+	margin:0px;
+	padding:0px;
+}
+body{
+	font-family: 'Tahoma', 'Arial', sans-serif;
+}
+.container{
+	width: 1200px;
+	height: 1200px;
+	display: inline-block;
+}
+
+.wrapper{
+	height: 500px;
+	width: 750px;
+	background: url('./bkg.jpeg');
+	background-repeat: no-repeat;
+	/* background-size: contain; */
+	margin-left:auto;
+	margin-right: auto;
+}
+
+
+#pDealer{
+	width:750px;
+	height:100px;
+	margin-left:325px;
+	margin-top: -35px;
+}
+
+#pCards1{
+	margin-top: 70px;
+	margin-left: 360px;
+}
+
+
+#pDealerScore{
+	color:white;
+	margin-left: 340px;
+	margin-top: 10px;
+
+}
+
+#play-narrative{
+	display: inline-block;
+	/* width: 40%; */
+	/* height: auto; */
+}
+
+.player-wrapper{
+	position: absolute;
+	top:490px;
+	width: 750px;
+}
+
+#cards-container{
+	margin-left: 100px;
+	margin-top:55px;
+	display: inline-block;
+	height: 100px;
+}
+
+.playerInfo{
+	background-color: silver;
+}
+
+
+img.dealer {
+	margin-left: -35px;
+	margin-top: 15px;
+}
+
+img.player{
+	margin: 3px;
+	margin-left: -45px;
+}
+
+button{
+	margin-bottom: 25px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 5px;
+	background-color: #075C35;
+	color:white;
+	border-radius: 3px;
+	display: inline-block;
+	font-size: 1em;
+}
+
+form{
+	display: inline-block;
+}
